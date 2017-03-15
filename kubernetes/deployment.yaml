@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: aspnet-core-secrets-demo
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: aspnet-core-secrets-demo
+    spec:
+      containers:
+      - name: aspnet-core-secrets-demo
+        image: anthonychu/aspnet-core-secrets:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: "ASPNETCORE_ENVIRONMENT"
+          value: "Kubernetes"
+        volumeMounts:
+        - name: secrets
+          mountPath: /app/secrets
+          readOnly: true
+      volumes:
+      - name: secrets
+        secret:
+          secretName: secret-appsettings
